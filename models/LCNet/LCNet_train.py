@@ -12,7 +12,7 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from LCNet_model import *
 from colorama import Fore
-from metric import *
+from models.metric import *
 import pandas as pd
 import os
 import argparse
@@ -89,8 +89,6 @@ def valid(dataloader, model, loss_fn, device):
         return loss
 
 # For updating learning rate
-
-
 def update_lr(optimizer, lr):
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
@@ -122,8 +120,10 @@ if __name__ == '__main__':
     lr, positive_weight = 1e-4, 1.5
     epochs = 150
 
-    model = CTNet(batch_size, in_features, out_features).to(device)
-    loss_fn = nn.CrossEntropyLoss().to(device)
+    model = CTNet(batch_size, in_features, out_features)
+    model = model.to(device)
+    loss_fn = nn.CrossEntropyLoss()
+    loss_fn = loss_fn.to(device)
 
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
@@ -148,5 +148,4 @@ if __name__ == '__main__':
         new_loss = valid(valid_dataloader, model, loss_fn, device)
         if new_loss < loss:
             loss = new_loss
-            torch.save(model.state_dict(),
-                       f"../../checkpoints/LCNet/{t}_epoc_loss_{loss}.pt")
+            torch.save(model.state_dict(), f"../../checkpoints/LCNet/{t}_epoc_loss_{loss}.pt")

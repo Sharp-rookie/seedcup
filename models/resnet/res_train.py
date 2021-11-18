@@ -4,7 +4,7 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from res_model import *
 from colorama import Fore
-from metric import *
+from models.metric import *
 import pandas as pd
 import os
 import argparse
@@ -81,15 +81,15 @@ def valid(dataloader, model, loss_fn, device):
         pred = torch.cat(pred)
         Y = torch.cat(Y)
 
-        metric = {'acc': 0, 'precision': 0, 'recall': 0, 'Fscore': 0}
-        metric['acc'] = Accuracy(pred, Y)
-        metric['precision'] = Precision(pred, Y)
-        metric['recall'] = Recall(pred, Y)
-        metric['Fscore'] = Fscore(pred, Y)
+        # metric = {'acc': 0, 'precision': 0, 'recall': 0, 'Fscore': 0}
+        # metric['acc'] = Accuracy(pred, Y)
+        # metric['precision'] = Precision(pred, Y)
+        # metric['recall'] = Recall(pred, Y)
+        # metric['Fscore'] = Fscore(pred, Y)
 
-        print(f"{Fore.CYAN + '[valid]===>'} "
-              f"loss: {loss}  acc: {metric['acc']}  precision: {metric['precision']}  recall: {metric['recall']}   fscore: {metric['Fscore']}"
-              f"{'' + Fore.RESET}")
+        # print(f"{Fore.CYAN + '[valid]===>'} "
+        #       f"loss: {loss}  acc: {metric['acc']}  precision: {metric['precision']}  recall: {metric['recall']}   fscore: {metric['Fscore']}"
+        #       f"{'' + Fore.RESET}")
 
         return P1(pred, Y), P0(pred, Y), Fscore(pred, Y)
 
@@ -111,7 +111,7 @@ def parse_args():
     parser.add_argument('--in_feature', type=int,
                         default=28)
     parser.add_argument('--device', type=str,
-                        default='cpu')
+                        default='cuda')
 
     return parser.parse_args()
 
@@ -154,8 +154,8 @@ if __name__ == '__main__':
 
         # for t in range(epochs):
         for t in range(3):
-            print(f"{Fore.GREEN + '===>'} Epoch {t + 1} {'' + Fore.RESET}\n"
-                  "---------------------------------------")
+            # print(f"{Fore.GREEN + '===>'} Epoch {t + 1} {'' + Fore.RESET}\n"
+            #       "---------------------------------------")
             train(train_dataloader, model, loss_fn,
                   optimizer, device, positive_weight)
             P1_, P0_, Fscore_ = valid(valid_dataloader, model, loss_fn, device)

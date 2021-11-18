@@ -4,7 +4,7 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from colorama import Fore
 from baseline_model import Fake1DAttention
-from metric import *
+from models.metric import *
 import pandas as pd
 import os
 import argparse
@@ -22,7 +22,6 @@ class SeedDataset(Dataset):
         super().__init__()
         self.data: pd.DataFrame = pd.read_csv(annotations_file)
         self.data: pd.DataFrame = self.data[self.data['label'].notna()]
-
         self.Y = self.data['label']
         self.X = self.data.drop(columns=['id', 'label']).fillna(value=-1)
 
@@ -58,7 +57,7 @@ def train(dataloader, model, loss_fn, optimizer, device, positive_weight):
         #         f"{Fore.GREEN + '[train]===>'} loss: {loss} {'' + Fore.RESET}")
 
 
-def valid(dataloader, model, loss_fn, device):
+def valid(dataloader, model, loss_fn, device) -> dict:
     model.eval()
 
     num_dataset = len(dataloader.dataset)

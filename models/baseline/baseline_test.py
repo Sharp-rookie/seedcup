@@ -23,6 +23,7 @@ def parse_args():
 
 
 class SeedDataset(Dataset):
+
     def __init__(self, annotations_file):
         super().__init__()
         self.data: pd.DataFrame = pd.read_csv(annotations_file)
